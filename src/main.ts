@@ -119,8 +119,9 @@ listaBlocos.forEach(bloco => {
 let pontos = 0
 
 const textoPontos = new Text({
-	text: `Pontos: ${pontos}`,
-	font: new Font({size: 20})
+	text: `PONTOS: ${pontos}`,
+	font: new Font({size: 20}),
+	color: Color.White
 })
 
 const objetoTexto = new Actor({
@@ -148,7 +149,7 @@ bolinha.on("collisionstart", (event) => {
 		pontos += 100;
 
 		// Atualiza a pontuação na tela
-		textoPontos.text = `Pontos: ${pontos}`
+		textoPontos.text = `PONTOS: ${pontos}`
 	}
 
 	// Rebater a bolinha - Inverter as direções
