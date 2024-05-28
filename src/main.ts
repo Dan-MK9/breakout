@@ -10,7 +10,7 @@ const game = new Engine({
 const barra = new Actor({
 	x: 150,
 	y: game.drawHeight - 40, // game.drawHeight
-	width: 100,
+	width: 150,
 	height: 20,
 	color: Color.Chartreuse,
 	name: "BarraJogador"
@@ -119,7 +119,7 @@ listaBlocos.forEach(bloco => {
 let pontos = 0
 
 const textoPontos = new Text({
-	text: "Hello World",
+	text: `Pontos: ${pontos}`,
 	font: new Font({size: 20})
 })
 
@@ -128,12 +128,12 @@ const objetoTexto = new Actor({
 	y: game.drawHeight - 15
 })
 
-objetoTexto.graphics.use(textoPontos)
+objetoTexto.graphics.use(textoPontos);
+objetoTexto.body.collisionType = CollisionType.PreventCollision;
 
 game.add(objetoTexto)
 
 let colidindo: boolean = false
-
 
 bolinha.on("collisionstart", (event) => {
 	// Verificar se a bolinha colidiu com algum bloco destrutivel
@@ -143,6 +143,12 @@ bolinha.on("collisionstart", (event) => {
 	if (listaBlocos.includes(event.other) ) {
 		// Destruir o bloco colidido
 		event.other.kill()
+
+		// Aumenta a pontuação
+		pontos += 100;
+
+		// Atualiza a pontuação na tela
+		textoPontos.text = `Pontos: ${pontos}`
 	}
 
 	// Rebater a bolinha - Inverter as direções
@@ -172,7 +178,7 @@ bolinha.on("collisionend", () => {
 })
 
 bolinha.on("exitviewport", () => {
-	alert("Faleceu")
+	alert("Noob")
 	window.location.reload()
 })
 
