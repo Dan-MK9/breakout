@@ -1,4 +1,4 @@
-import { Actor, CollisionType, Color, Engine, Font, Text, vec } from "excalibur"
+import { Actor, CollisionType, Color, Engine, Font, FontUnit, Label, Loader, Sound, vec } from "excalibur"
 
 // 1 - Criar uma instancia de Engine, que representa o jogo
 const game = new Engine({
@@ -118,38 +118,65 @@ listaBlocos.forEach(bloco => {
 // Adicionando pontuação
 let pontos = 0
 
-const textoPontos = new Text({
-	text: `PONTOS: ${pontos}`,
-	font: new Font({size: 20}),
-	color: Color.White
+// const textoPontos = new Text({
+// 	text: `PONTOS: ${pontos}`,
+// 	font: new Font({size: 22}),
+// 	color: Color.White
+// })
+
+// const objetoTexto = new Actor({
+// 	x: game.drawWidth - 80,
+// 	y: game.drawHeight - 15
+// })
+
+// objetoTexto.graphics.use(textoPontos);
+// objetoTexto.body.collisionType = CollisionType.PreventCollision;
+
+// game.add(objetoTexto)
+
+const textoPontos = new Label({
+	text: pontos.toString(),
+	font: new Font({
+		size: 40,
+		color: Color.White,
+		strokeColor: Color.Black,
+		unit: FontUnit.Px
+	}),
+	pos: vec(600, 500)
 })
 
-const objetoTexto = new Actor({
-	x: game.drawWidth - 80,
-	y: game.drawHeight - 15
-})
-
-objetoTexto.graphics.use(textoPontos);
-objetoTexto.body.collisionType = CollisionType.PreventCollision;
-
-game.add(objetoTexto)
+game.add(textoPontos)
 
 let colidindo: boolean = false
 
 bolinha.on("collisionstart", (event) => {
 	// Verificar se a bolinha colidiu com algum bloco destrutivel
 	console.log("Colidiu com ", event.other.name);
-
+	
 	// Se o elemento colidido for um bloco da lista de blocos (destruidos)
-	if (listaBlocos.includes(event.other) ) {
+	if (listaBlocos.includes(event.other)) {
 		// Destruir o bloco colidido
 		event.other.kill()
+		
+		// // Aumenta a pontuação
+		// pontos += 100;
+		
+		// // Atualiza a pontuação na tela
+		// textoPontos.text = `PONTOS: ${pontos}`
+		
+		// adiciona um ponto
+		pontos++
+		
+		// atualiza o valor do placar textoPontos
+		textoPontos.text = pontos.toString()
 
-		// Aumenta a pontuação
-		pontos += 100;
+		// Adicionando som ao jogo, ao destruir um bloco
+		som.play(1)
 
-		// Atualiza a pontuação na tela
-		textoPontos.text = `PONTOS: ${pontos}`
+		if (pontos == 15) {
+			alert ("Você venceu")
+			window.location.reload
+		}
 	}
 
 	// Rebater a bolinha - Inverter as direções
@@ -162,7 +189,7 @@ bolinha.on("collisionstart", (event) => {
 
 		// Interseccao.x e interseccao.y
 		// O maior representsa o eixo onde houve o contato
-		if( Math.abs(interseccao.x) > Math.abs(interseccao.y)) {
+		if (Math.abs(interseccao.x) > Math.abs(interseccao.y)) {
 			// bolinha.vel.x = -bolinha.vel.x
 			// bolinha.vel.x *= -1
 			bolinha.vel.x = bolinha.vel.x * -1
@@ -172,16 +199,24 @@ bolinha.on("collisionstart", (event) => {
 			bolinha.vel.y = bolinha.vel.y * -1
 		}
 	}
-}) 
+})
 
 bolinha.on("collisionend", () => {
 	colidindo = false
 })
 
 bolinha.on("exitviewport", () => {
-	alert("Noob")
+	alert("Seu verme")
 	window.location.reload()
 })
 
+const som = new Sound ("./src/sound/pickup.wav")
+// const som2 = new Sound ("./src/sound/videogamevideogame-death-sound-43894.mp3")
+
+const carregar = new Loader ([som])
+
+// Carrega o som
+// await game.start(carregar)
+
 // Inicia o game
-game.start()
+game.start(carregar)
