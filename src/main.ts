@@ -174,6 +174,7 @@ bolinha.on("collisionstart", (event) => {
 		som.play(1)
 
 		if (pontos == 15) {
+			som2.play(1);
 			alert ("Você venceu")
 			window.location.reload
 		}
@@ -206,14 +207,15 @@ bolinha.on("collisionend", () => {
 })
 
 bolinha.on("exitviewport", () => {
+	som3.play(1);
 	alert("Seu verme")
 	window.location.reload()
 })
 
 const som = new Sound ("./src/sound/pickup.wav")
-// const som2 = new Sound ("./src/sound/videogamevideogame-death-sound-43894.mp3")
-
-const carregar = new Loader ([som])
+const som2 = new Sound ("./src/sound/Victorious.ogg")
+const som3 = new Sound (".scr/sound/")
+const carregar = new Loader ([som, som2])
 
 // Carrega o som
 // await game.start(carregar)
