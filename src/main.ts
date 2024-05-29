@@ -40,6 +40,23 @@ const bolinha = new Actor({
 
 bolinha.body.collisionType = CollisionType.Passive
 
+// Lista de cores para a bolinha
+let coresBolinhas = [
+	Color.Black,
+	Color.Chartreuse,
+	Color.Cyan,
+	Color.Gray,
+	Color.Magenta,
+	Color.Orange,
+	Color.LightGray,
+	Color.White,
+	Color.Yellow,
+	Color.DarkGray,
+	Color.Viridian
+]
+
+let numeroCores = coresBolinhas.length
+
 // 5 - Criar movimentação da bolinha
 const velocidadeBolinha = vec(400, 400)
 
@@ -80,9 +97,15 @@ const xoffset = 65
 const yoffset = 20
 
 const colunas = 5
-const linhas = 3
+const linhas = 5
 
-const corBloco = [Color.Red, Color.Orange, Color.Yellow]
+const corBloco = [
+	Color.Red,
+	Color.Orange,
+	Color.Violet,
+	Color.Blue,
+	Color.Vermilion
+]
 
 const larguraBloco = (game.drawWidth / colunas) - padding - (padding / colunas)
 // const larguraBloco = 136
@@ -135,14 +158,14 @@ let pontos = 0
 // game.add(objetoTexto)
 
 const textoPontos = new Label({
-	text: pontos.toString(),
+	text: `PONTOS: ${pontos}`,
 	font: new Font({
-		size: 40,
+		size: 27,
 		color: Color.White,
 		strokeColor: Color.Black,
 		unit: FontUnit.Px
 	}),
-	pos: vec(600, 500)
+	pos: vec(500, 500)
 })
 
 game.add(textoPontos)
@@ -157,7 +180,7 @@ bolinha.on("collisionstart", (event) => {
 	if (listaBlocos.includes(event.other)) {
 		// Destruir o bloco colidido
 		event.other.kill()
-		
+
 		// // Aumenta a pontuação
 		// pontos += 100;
 		
@@ -166,18 +189,32 @@ bolinha.on("collisionstart", (event) => {
 		
 		// adiciona um ponto
 		pontos++
+
+		// Mudar a cor da bolinha
+		bolinha.color = coresBolinhas[ Math.trunc( Math.random() * numeroCores ) ]
+		// Math.random -> 0 - 1 * numeroCores -> 10
+		// 0.5 * 10 = 5
+		// 0.3 * 10 = 3
+		// 0.873 * 10 = 8.83
+
+		// Math.trunc() -> retorna somente a porção inteira de um numero
+
+		// Mudar a cor da bolinha com a cor do bloco colidido
+		bolinha.color = event.other.color
 		
 		// atualiza o valor do placar textoPontos
-		textoPontos.text = pontos.toString()
+		textoPontos.text = `PONTOS: ${pontos}`
 
 		// Adicionando som ao jogo, ao destruir um bloco
 		som.play(1)
 
-		if (pontos == 15) {
+		if (pontos == 25) {
 			som2.play(1);
-			alert ("Você venceu")
+			alert ("Parabéns você venceu!!!")
 			window.location.reload
 		}
+		velocidadeBolinha.x += 50
+		velocidadeBolinha.y += 50
 	}
 
 	// Rebater a bolinha - Inverter as direções
@@ -208,17 +245,14 @@ bolinha.on("collisionend", () => {
 
 bolinha.on("exitviewport", () => {
 	som3.play(1);
-	alert("Seu verme")
+	alert("Você perdeu.")
 	window.location.reload()
 })
 
 const som = new Sound ("./src/sound/pickup.wav")
 const som2 = new Sound ("./src/sound/Victorious.ogg")
-const som3 = new Sound (".scr/sound/")
-const carregar = new Loader ([som, som2])
-
-// Carrega o som
-// await game.start(carregar)
+const som3 = new Sound (".scr/sound/Som de morte do Roblox (320).mp3")
+const carregar = new Loader ([som, som2, som3])
 
 // Inicia o game
-game.start(carregar)
+await game.start(carregar)
