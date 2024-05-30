@@ -244,15 +244,13 @@ bolinha.on("collisionend", () => {
 })
 
 bolinha.on("exitviewport", () => {
-	som3.play(1);
 	alert("Você perdeu.")
 	window.location.reload()
 })
 
 const som = new Sound ("./src/sound/pickup.wav")
 const som2 = new Sound ("./src/sound/Victorious.ogg")
-const som3 = new Sound (".scr/sound/Som de morte do Roblox (320).mp3")
-const carregar = new Loader ([som, som2, som3])
+const carregar = new Loader ([som, som2])
 
 // Inicia o game
 await game.start(carregar)
